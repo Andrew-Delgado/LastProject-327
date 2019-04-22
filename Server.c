@@ -18,7 +18,8 @@
 #include <netinet/in.h>
 #include <string.h>
 #include <time.h>
-#define PORT 5000
+#include <pthread.h> 
+#define PORT 5051
 #define MAXLINE 1024
 
 
@@ -35,14 +36,13 @@ long random();
 
 int main(int argc, char const *argv[])
 {
-	//printf("%ld \n", random());
-
 	struct users list[10];
 
-	while(1)
-	{
+	// pthread_t thread_id;
+	// pthread_create(&thread_id, NULL,udpCall,NULL);
+	
+	// pthread_join(thread_id, NULL);
 	udpCall();
-	}
 	//tcpCall(list, sizeof(list) / sizeof(*list));
 	
 
@@ -53,6 +53,7 @@ void udpCall(){
 	int sockfd; 
     char buffer[MAXLINE]; 
     char *hello = "Hello from server"; 
+	char exitWord[1024] = "goodbye";
     struct sockaddr_in servaddr, cliaddr; 
       
     // Creating socket file descriptor 
@@ -76,17 +77,26 @@ void udpCall(){
         perror("bind failed"); 
         exit(EXIT_FAILURE); 
     } 
-      
-    int len, n; 
-    n = recvfrom(sockfd, (char *)buffer, MAXLINE,  
-                MSG_WAITALL, ( struct sockaddr *) &cliaddr, 
-                &len); 
-    buffer[n] = '\0'; 
-    printf("Client : %s\n", buffer); 
-    sendto(sockfd, (const char *)hello, strlen(hello),  
-        MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
-            len); 
-    printf("Hello message sent.\n");  
+
+	//added this to keep the UDP_Checking.
+	 while(1)
+	 {
+		int len, n; 
+		n = recvfrom(sockfd, (char *)buffer, MAXLINE,  
+					MSG_WAITALL, ( struct sockaddr *) &cliaddr, 
+					&len); 
+		buffer[n] = '\0'; 
+
+		if(strcmp(exitWord, buffer) == 0){
+			break;
+		}
+
+		printf("Client : %s\n", buffer); 
+		sendto(sockfd, (const char *)hello, strlen(hello),  
+			MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
+				len); 
+		printf("------------------------------------message sent from server.\n");  
+	 }
 }
 
 // void udpCall(){

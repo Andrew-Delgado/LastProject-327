@@ -6,13 +6,14 @@
 #include <strings.h> 
 #include <sys/socket.h> 
 #include <sys/types.h> 
-#define PORT 5000 
+#define PORT 5051 
 #define MAXLINE 1024 
 int main() 
 { 
 	int sockfd; 
 	char buffer[MAXLINE]; 
-	char* message = "Hello Server"; 
+	//char* message = "Hello from Client"; 
+	char message[100];
 	struct sockaddr_in servaddr; 
 
 	int n, len; 
@@ -29,17 +30,20 @@ int main()
 	servaddr.sin_port = htons(PORT); 
 	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
         //printf("Test\n"); 
+	printf("\nEnter in a message: ");
+	fgets(message, 10, stdin);
 	// send hello message to server 
 	sendto(sockfd, (const char*)message, strlen(message), 
 		0, (const struct sockaddr*)&servaddr, 
 		sizeof(servaddr)); 
 
-	// receive server's response 
-	//printf("Message from server: "); 
-	//n = recvfrom(sockfd, (char*)buffer, MAXLINE, 
-//				0, (struct sockaddr*)&servaddr, 
-//				&len); 
-//	puts(buffer); 
+	//receive server's response 
+	// printf("Message from server: "); 
+	// n = recvfrom(sockfd, (char*)buffer, MAXLINE, 
+	// 			0, (struct sockaddr*)&servaddr, 
+	// 			&len); 
+	// puts(buffer); 
 	close(sockfd); 
+
 	return 0; 
 } 
