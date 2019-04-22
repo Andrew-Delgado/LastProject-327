@@ -38,11 +38,14 @@ int main(int argc, char const *argv[])
 {
 	struct users list[10];
 
-	// pthread_t thread_id;
-	// pthread_create(&thread_id, NULL,udpCall,NULL);
-	
-	// pthread_join(thread_id, NULL);
-	udpCall();
+	pthread_t thread_id[2];
+	pthread_create(&thread_id[0], NULL,udpCall,NULL);
+	pthread_create(&thread_id[1], NULL,tcpCall,list);
+
+	pthread_join(thread_id[0], NULL);
+	pthread_join(thread_id[1], NULL);
+	//udpCall();
+
 	//tcpCall(list, sizeof(list) / sizeof(*list));
 	
 
@@ -87,15 +90,15 @@ void udpCall(){
 					&len); 
 		buffer[n] = '\0'; 
 
-		if(strcmp(exitWord, buffer) == 0){
-			break;
-		}
+		// if(strcmp(exitWord, buffer) == 0){
+		// 	break;
+		// }
 
 		printf("Client : %s\n", buffer); 
 		sendto(sockfd, (const char *)hello, strlen(hello),  
 			MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
 				len); 
-		printf("------------------------------------message sent from server.\n");  
+		printf("-----------------message sent from server....time: %d\n", time(0));  
 	 }
 }
 
@@ -156,7 +159,7 @@ void tcpCall(struct users list[], size_t len) {
 	int opt = 1;
 	int addrlen = sizeof(address);
 	char buffer[1024] = {0};
-	char serverMessage[200] = {0};
+	char serverMessage[200] = "This is from the server";
 
 	// Creating socket file descriptor
 	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
@@ -211,13 +214,13 @@ void tcpCall(struct users list[], size_t len) {
 
 		list[0].GUID = random();
 		strcpy(list[0].fileName, buffer);
-		list[0].timeStamp = 123;
+		list[0].timeStamp = time(0);
 
-		// printf("Enter Message: ");
-		// fgets(serverMessage, 200,stdin);
-		// send(new_socket , serverMessage , strlen(serverMessage) , 0 );
+		printf("Enter Message: ");
+		fgets(serverMessage, 200,stdin);
+		send(new_socket , serverMessage , strlen(serverMessage) , 0 );
 
-		break;
+		//break;
 	}
 
 	printf("GUID: %d FileName: %s timeStamp: %d\n", list[0].GUID, list[0].fileName,list[0].timeStamp );

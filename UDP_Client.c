@@ -30,13 +30,17 @@ int main()
 	servaddr.sin_port = htons(PORT); 
 	servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
         //printf("Test\n"); 
-	printf("\nEnter in a message: ");
-	fgets(message, 10, stdin);
+	//printf("\nEnter in a message: ");
+	//fgets(message, 100, stdin);
 	// send hello message to server 
+	while(1){
+
+	
 	sendto(sockfd, (const char*)message, strlen(message), 
 		0, (const struct sockaddr*)&servaddr, 
 		sizeof(servaddr)); 
-
+		sleep(2);
+	}
 	//receive server's response 
 	// printf("Message from server: "); 
 	// n = recvfrom(sockfd, (char*)buffer, MAXLINE, 

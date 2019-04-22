@@ -5,7 +5,7 @@
 #include <string.h> 
 #include <sys/socket.h> 
 #include <sys/types.h> 
-#define PORT 5000 
+#define PORT 5051 
 #define MAXLINE 1024 
 int main() 
 { 
