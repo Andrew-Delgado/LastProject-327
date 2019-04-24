@@ -39,7 +39,7 @@ int main()
 	sendto(sockfd, (const char*)message, strlen(message), 
 		0, (const struct sockaddr*)&servaddr, 
 		sizeof(servaddr)); 
-		sleep(2);
+		sleep(10);
 	}
 	//receive server's response 
 	// printf("Message from server: "); 

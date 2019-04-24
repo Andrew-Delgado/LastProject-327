@@ -33,12 +33,16 @@ int main()
 		printf("\n Error : Connect Failed \n"); 
 	} 
 
-	memset(buffer, 0, sizeof(buffer)); 
-	strcpy(buffer, message); 
-	write(sockfd, buffer, sizeof(buffer)); 
+	while(1)
+	{
+		memset(buffer, 0, sizeof(buffer)); 
+		strcpy(buffer, message); 
+		write(sockfd, buffer, sizeof(buffer)); 
 
-	printf("Message from server: "); 
-	read(sockfd, buffer, sizeof(buffer)); 
-	puts(buffer); 
-	close(sockfd); 
+		printf("Message from server: "); 
+		read(sockfd, buffer, sizeof(buffer)); 
+		puts(buffer); 
+		//close(sockfd); 
+	}
+	close(sockfd);
 } 
