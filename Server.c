@@ -159,7 +159,7 @@ void tcpCall(struct users list[], size_t len) {
 	int opt = 1;
 	int addrlen = sizeof(address);
 	char buffer[1024] = {0};
-	char serverMessage[200] = "This is from the server";
+	char serverMessage[200] = "";
 
 	// Creating socket file descriptor
 	if ((server_fd = socket(AF_INET, SOCK_STREAM, 0)) == 0)
@@ -208,19 +208,21 @@ void tcpCall(struct users list[], size_t len) {
 			memset(buffer, 0, sizeof(buffer));
 		}
 
-		valread = read( new_socket , buffer, 1024);
-		printf("client: %s\n",buffer );
-
+		//valread = read( new_socket , buffer, 1024);
+		//printf("client: %s\n",buffer );
 
 		list[0].GUID = random();
 		strcpy(list[0].fileName, buffer);
 		list[0].timeStamp = time(0);
 
-		printf("Enter Message: ");
-		fgets(serverMessage, 200,stdin);
+		//printf("Enter Message: ");
+		//fgets(serverMessage, 1024, stdin);
+		snprintf(serverMessage, sizeof(serverMessage), "%d", list[0].GUID);
 		send(new_socket , serverMessage , strlen(serverMessage) , 0 );
-
-		//break;
+		puts(serverMessage);
+		
+		fflush(stdin);
+		break;
 	}
 
 	printf("GUID: %d FileName: %s timeStamp: %d\n", list[0].GUID, list[0].fileName,list[0].timeStamp );

@@ -11,7 +11,7 @@ int main()
 { 
 	int sockfd; 
 	char buffer[MAXLINE]; 
-	char* message = "This is from Client"; 
+	char* message = ""; 
 	struct sockaddr_in servaddr; 
 
 	int n, len; 
@@ -36,13 +36,16 @@ int main()
 	while(1)
 	{
 		memset(buffer, 0, sizeof(buffer)); 
-		strcpy(buffer, message); 
-		write(sockfd, buffer, sizeof(buffer)); 
+		//strcpy(buffer, message); 
+		//send(sockfd, message, sizeof(message), 0);
+		//write(sockfd, buffer, sizeof(buffer)); 
 
 		printf("Message from server: "); 
 		read(sockfd, buffer, sizeof(buffer)); 
-		puts(buffer); 
+		printf("%s", buffer); 
 		//close(sockfd); 
+		fflush(stdin);
+		break;
 	}
 	close(sockfd);
 } 
