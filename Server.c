@@ -191,16 +191,16 @@ void tcpCall(struct users list[], size_t len) {
 		perror("listen");
 		exit(EXIT_FAILURE);
 	}
-	if ((new_socket = accept(server_fd, (struct sockaddr *)&address,
-					(socklen_t*)&addrlen))<0)
+	//if ((new_socket = accept(server_fd, (struct sockaddr *)&address,
+	//				(socklen_t*)&addrlen))<0)
+	//{
+	//	perror("accept");
+	//	exit(EXIT_FAILURE);
+	//}
+	int i = 0;
+	while(i < 5)//This is an infinite loop that keeps the chat indefinitely open
 	{
-		perror("accept");
-		exit(EXIT_FAILURE);
-	}
-
-	while(1)//This is an infinite loop that keeps the chat indefinitely open
-	{
-
+		new_socket = accept(server_fd, (struct sockaddr*)NULL, NULL);
 		//clears the buffer
 		if(strlen(serverMessage)> 0)
 		{
@@ -208,24 +208,23 @@ void tcpCall(struct users list[], size_t len) {
 			memset(buffer, 0, sizeof(buffer));
 		}
 
-		//valread = read( new_socket , buffer, 1024);
-		//printf("client: %s\n",buffer );
+		list[i].GUID = random();
+		list[i].timeStamp = time(0);
 
-		list[0].GUID = random();
-		strcpy(list[0].fileName, buffer);
-		list[0].timeStamp = time(0);
-
-		//printf("Enter Message: ");
-		//fgets(serverMessage, 1024, stdin);
-		snprintf(serverMessage, sizeof(serverMessage), "%d", list[0].GUID);
-		send(new_socket , serverMessage , strlen(serverMessage) , 0 );
+		snprintf(serverMessage, sizeof(serverMessage), "%d", list[i].GUID);
+		//send(new_socket , serverMessage , strlen(serverMessage) , 0 );
+		write(new_socket, serverMessage, strlen(serverMessage));
 		puts(serverMessage);
-		
-		fflush(stdin);
-		break;
-	}
+		valread = read( new_socket , buffer, 1024);
+		strcpy(list[i].fileName, buffer);
+                printf("client: %s\n",buffer );
+		close(new_socket);
+		sleep(1);
+	
 
-	printf("GUID: %d FileName: %s timeStamp: %d\n", list[0].GUID, list[0].fileName,list[0].timeStamp );
+	printf("GUID: %d FileName: %s timeStamp: %d\n", list[i].GUID, list[i].fileName,list[i].timeStamp );
+	i++;
+	}
 }
 
 long random(){

@@ -11,7 +11,7 @@ int main()
 { 
 	int sockfd; 
 	char buffer[MAXLINE]; 
-	char* message = ""; 
+	char* message = "fuck.txt"; 
 	struct sockaddr_in servaddr; 
 
 	int n, len; 
@@ -32,20 +32,31 @@ int main()
 							sizeof(servaddr)) < 0) { 
 		printf("\n Error : Connect Failed \n"); 
 	} 
-
-	while(1)
+	memset(buffer, 0, sizeof(buffer));
+	while((n = read(sockfd, buffer, sizeof(buffer)-1)) > 0)
 	{
-		memset(buffer, 0, sizeof(buffer)); 
-		//strcpy(buffer, message); 
-		//send(sockfd, message, sizeof(message), 0);
-		//write(sockfd, buffer, sizeof(buffer)); 
-
+                //memset(message, 0, sizeof(message));
+                //memset(buffer, 0, sizeof(buffer));
+		
 		printf("Message from server: "); 
-		read(sockfd, buffer, sizeof(buffer)); 
-		printf("%s", buffer); 
-		//close(sockfd); 
-		fflush(stdin);
-		break;
+		if(fputs(buffer, stdout) == EOF)
+		{
+			printf("\n Error : Fputs error\n");
+		}
+		printf("\n");
+		send(sockfd, message, sizeof(message),0);
+		//buffer[n] = 0;
+                //n = read(sockfd, buffer, sizeof(buffer));
+		//if(fputs(buffer, stdout) == EOF)
+		//{
+		//	printf("\n Error : Fputs error\n");
+		//}
 	}
-	close(sockfd);
+	
+	if(n < 0)
+    	{
+        	printf("\n Read error \n");
+    	}
+	return 0;
+
 } 
