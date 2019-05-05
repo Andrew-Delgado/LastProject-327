@@ -102,56 +102,6 @@ void udpCall(){
 	 }
 }
 
-// void udpCall(){
-
-// 	int listenfd, connfd, udpfd, nready, maxfdp1; 
-// 	char buffer[MAXLINE]; 
-// 	pid_t childpid; 
-// 	fd_set rset; 
-// 	ssize_t n; 
-// 	socklen_t len; 
-// 	const int on = 1; 
-// 	struct sockaddr_in cliaddr, servaddr; 
-// 	char* message = "Hello Client"; 
-// 	void sig_chld(int); 
-
-// 	printf("before the infinite loop");
-
-// 	udpfd = socket(AF_INET, SOCK_DGRAM, 0); 
-// 	// binding server addr structure to udp sockfd 
-// 	bind(udpfd, (struct sockaddr*)&servaddr, sizeof(servaddr)); 
-
-// 	// clear the descriptor set 
-// 	FD_ZERO(&rset); 
-
-// 	//get maxfd; 
-// 	maxfdp1 = udpfd; 
-
-// 	// 	// set listenfd and udpfd in readset 
-// 		FD_SET(listenfd, &rset); 
-// 		FD_SET(udpfd, &rset); 
-
-// 		// select the ready descriptor 
-// 		nready = select(maxfdp1, &rset, NULL, NULL, NULL); 
-
-// 	printf("before the infinite loop");
-// 	// if udp socket is readable receive the message. 
-// 	while(1)
-// 	{
-// 		if (FD_ISSET(udpfd, &rset)) { 
-// 			len = sizeof(cliaddr); 
-// 			bzero(buffer, sizeof(buffer)); 
-// 			printf("\nMessage from UDP client: "); 
-// 			n = recvfrom(udpfd, buffer, sizeof(buffer), 0, 
-// 						(struct sockaddr*)&cliaddr, &len); 
-// 			puts(buffer); 
-// 			//sendto(udpfd, (const char*)message, sizeof(buffer), 0, 
-// 			//	(struct sockaddr*)&cliaddr, sizeof(cliaddr)); 
-// 		}
-// 	}
-// }
-
-
 void tcpCall(struct users list[], size_t len) {
 
 	int server_fd, new_socket, valread;
@@ -218,20 +168,15 @@ void tcpCall(struct users list[], size_t len) {
 		valread = read( new_socket , buffer, 1024);
 		strcpy(list[i].fileName, buffer);
                 printf("client: %s\n",buffer );
-		//sleep(1);
 	
 
-	printf("GUID: %d FileName: %s timeStamp: %d\n", list[i].GUID, list[i].fileName,list[i].timeStamp );
+		printf("GUID: %d FileName: %s timeStamp: %d\n", list[i].GUID, list[i].fileName,list[i].timeStamp );
 	i++;
 	}
 	close(new_socket);
 }
 
 long random(){
-
 	srand(time(0));
-
-
-
 	return rand()%1001;
 }

@@ -1,14 +1,31 @@
 // TCP Client program 
+#include <arpa/inet.h>
 #include <netinet/in.h> 
 #include <stdio.h> 
 #include <stdlib.h> 
 #include <string.h> 
 #include <sys/socket.h> 
 #include <sys/types.h> 
+#include <pthread.h>
 #define PORT 5051 
 #define MAXLINE 1024 
-int main() 
-{ 
+
+void tcpClient();
+void udpClient();
+
+int main(int argc, char const *argv[]) 
+{
+	pthread_t thread_id[2];
+	pthread_create(&thread_id[0], NULL, tcpClient, NULL);
+	pthread_create(&thread_id[1], NULL, udpClient, NULL);
+	pthread_join(thread_id[0], NULL);
+	pthread_join(thread_id[1], NULL);
+	//tcpClient();
+	//udpClient();
+	return 0;	
+}	
+
+void tcpClient() {
 	int sockfd; 
 	char buffer[MAXLINE]; 
 	char* message = "fuck.txt"; 
@@ -59,6 +76,45 @@ int main()
     	{
         	printf("\n Read error \n");
     	}
-	return 0;
+}
 
-} 
+void udpClient() {
+	int sockfd;
+        char buffer[MAXLINE];
+        //char* message = "Hello from Client";
+        char message[100];
+        struct sockaddr_in servaddr;
+
+        int n, len;
+        // Creating socket file descriptor
+        if ((sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0) {
+                printf("socket creation failed");
+                exit(0);
+        }
+
+        memset(&servaddr, 0, sizeof(servaddr));
+
+        // Filling server information
+        servaddr.sin_family = AF_INET;
+        servaddr.sin_port = htons(PORT);
+        servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+        //printf("Test\n");
+        //printf("\nEnter in a message: ");
+        //fgets(message, 100, stdin);
+        // send hello message to server
+        while(1){
+
+
+        sendto(sockfd, (const char*)message, strlen(message),
+                0, (const struct sockaddr*)&servaddr,
+                sizeof(servaddr));
+                sleep(10);
+        }
+        //receive server's response
+        // printf("Message from server: ");
+        // n = recvfrom(sockfd, (char*)buffer, MAXLINE,
+        //                      0, (struct sockaddr*)&servaddr,
+        //                      &len);
+        // puts(buffer);
+        close(sockfd);
+}
