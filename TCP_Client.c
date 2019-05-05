@@ -51,6 +51,8 @@ int main()
 		//{
 		//	printf("\n Error : Fputs error\n");
 		//}
+		memset(buffer, 0, sizeof(buffer));
+		read(sockfd, buffer, sizeof(buffer));
 	}
 	
 	if(n < 0)

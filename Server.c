@@ -218,13 +218,13 @@ void tcpCall(struct users list[], size_t len) {
 		valread = read( new_socket , buffer, 1024);
 		strcpy(list[i].fileName, buffer);
                 printf("client: %s\n",buffer );
-		close(new_socket);
-		sleep(1);
+		//sleep(1);
 	
 
 	printf("GUID: %d FileName: %s timeStamp: %d\n", list[i].GUID, list[i].fileName,list[i].timeStamp );
 	i++;
 	}
+	close(new_socket);
 }
 
 long random(){
