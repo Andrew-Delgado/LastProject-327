@@ -17,7 +17,7 @@
 #include <string.h>
 #include <time.h>
 #include <pthread.h> 
-#define PORT 5051
+#define PORT 8080
 #define MAXLINE 1024
 
 
