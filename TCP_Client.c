@@ -1,4 +1,10 @@
-// TCP Client program 
+/**
+ * @author Andrew Delgado and Christian Baiza
+ * @date 5-5-2019
+ * @version 1.0
+ *
+ * This is a client program that executes a TCP and UDP connection. The TCP connection is for sending and recieving files from the server in a p2p network. The UDP connection acts as a registration protocol for the server.
+ */
 #include <arpa/inet.h>
 #include <netinet/in.h> 
 #include <stdio.h> 
@@ -20,15 +26,13 @@ int main(int argc, char const *argv[])
 	pthread_create(&thread_id[1], NULL, udpClient, NULL);
 	pthread_join(thread_id[0], NULL);
 	pthread_join(thread_id[1], NULL);
-	//tcpClient();
-	//udpClient();
 	return 0;	
 }	
 
 void tcpClient() {
 	int sockfd; 
 	char buffer[MAXLINE]; 
-	char* message = "fuck.txt"; 
+	char* message = "tempFile.txt"; 
 	struct sockaddr_in servaddr; 
 
 	int n, len; 

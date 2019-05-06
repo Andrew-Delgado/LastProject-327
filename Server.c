@@ -1,14 +1,12 @@
 /**
  * @author Andrew Delgado and Christian Baiza
- * @date 2-24-2019
+ * @date 5-5-2019
  * @version 1.0
  *
- * This program acts as a server to receive and send messages to a client(Client.c).
+ * This program acts as a server to facilitate and register clients for a p2p network
  * This is achieved by setting up a socket with the port 8080,
  * 	the program then waits and listens for a client trying to connect.
- * Once the client connects to the server it waits for the client to send the first message,
- * 	the message is then displayed in the terminal and then each program must take turns
- * 	sending messages.
+ * Once the client connects to the server it registers the client with a GUID and accepts the file passed to it.
  *
  */
 #include <unistd.h>
