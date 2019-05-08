@@ -64,14 +64,13 @@ int sockfd;
                             sizeof(servaddr)) < 0) { 
         printf("\n Error : Connect Failed \n"); 
     } 
+    // Clear buffer and read socket
     memset(buffer, 0, sizeof(buffer));
     while((n = read(sockfd, buffer, sizeof(buffer)-1)) > 0)
     {
-        //memset(message, 0, sizeof(message));
-        //memset(buffer, 0, sizeof(buffer));
+	// Set GUID to read value
         GUID = buffer;
-        // printf("Message from server: "); 
-        //printf(""); 
+	printf("Registered as Client: ");
         if(fputs(buffer, stdout) == EOF)
         {
             printf("\n Error : Fputs error\n");
@@ -108,10 +107,6 @@ void udpCall()
     servaddr.sin_family = AF_INET; 
     servaddr.sin_port = htons(PORT); 
     servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
-        //printf("Test\n"); 
-    //printf("\nEnter in a message: ");
-    //fgets(message, 100, stdin);
-    // send hello message to server 
     while(1){
 
     
@@ -120,11 +115,5 @@ void udpCall()
         sizeof(servaddr)); 
         sleep(2);
     }
-    //receive server's response 
-    // printf("Message from server: "); 
-    // n = recvfrom(sockfd, (char*)buffer, MAXLINE, 
-    //          0, (struct sockaddr*)&servaddr, 
-    //          &len); 
-    // puts(buffer); 
     close(sockfd); 
 }

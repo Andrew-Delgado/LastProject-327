@@ -31,26 +31,22 @@ struct users{
 void udpCall();
 void tcpCall(struct users list[], size_t len);
 long random();
+int check(int clientTime);
 
 int main(int argc, char const *argv[])
 {
 	struct users list[10];
 
 	pthread_t thread_id[2];
-	pthread_create(&thread_id[0], NULL,udpCall,NULL);
+	pthread_create(&thread_id[0], NULL,udpCall,list);
 	pthread_create(&thread_id[1], NULL,tcpCall,list);
 
 	pthread_join(thread_id[0], NULL);
 	pthread_join(thread_id[1], NULL);
-	//udpCall();
-
-	//tcpCall(list, sizeof(list) / sizeof(*list));
-	
-
 	return 0;
 }
 
-void udpCall(){
+void udpCall(struct users list[], size_t len){
 	int sockfd; 
     char buffer[MAXLINE]; 
     char *hello = "Hello from server"; 
@@ -88,15 +84,18 @@ void udpCall(){
 					&len); 
 		buffer[n] = '\0'; 
 
-		// if(strcmp(exitWord, buffer) == 0){
-		// 	break;
-		// }
+		int num = atoi(buffer);
+		
+		for(int i = 0; i < sizeof(list)/sizeof(int); i++){
+			if(list[i].GUID == num){
+				int answer = check(list[i].GUID);
+				printf("Client GUID: %s\n", buffer); 
+				sendto(sockfd, (const char *)hello, strlen(hello),  
+				MSG_CONFIRM, (const struct sockaddr *) &cliaddr, len); 
+		printf("-----------------UDP Connection Check....time: %d\n\n", time(0));  
+			}
+		}
 
-		printf("Client : %s\n", buffer); 
-		sendto(sockfd, (const char *)hello, strlen(hello),  
-			MSG_CONFIRM, (const struct sockaddr *) &cliaddr, 
-				len); 
-		printf("-----------------message sent from server....time: %d\n", time(0));  
 	 }
 }
 
@@ -116,13 +115,6 @@ void tcpCall(struct users list[], size_t len) {
 		exit(EXIT_FAILURE);
 	}
 
-	// // Forcefully attaching socket to the port 8080
-	// if (setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR | SO_REUSEPORT,
-	// 											&opt, sizeof(opt)))
-	// {
-	// 	perror("setsockopt");
-	// 	exit(EXIT_FAILURE);
-	// }
 	address.sin_family = AF_INET;
 	address.sin_addr.s_addr = INADDR_ANY;
 	address.sin_port = htons( PORT );
@@ -139,12 +131,6 @@ void tcpCall(struct users list[], size_t len) {
 		perror("listen");
 		exit(EXIT_FAILURE);
 	}
-	//if ((new_socket = accept(server_fd, (struct sockaddr *)&address,
-	//				(socklen_t*)&addrlen))<0)
-	//{
-	//	perror("accept");
-	//	exit(EXIT_FAILURE);
-	//}
 	int i = 0;
 	while(i < 5)//This is an infinite loop that keeps the chat indefinitely open
 	{
@@ -160,21 +146,31 @@ void tcpCall(struct users list[], size_t len) {
 		list[i].timeStamp = time(0);
 
 		snprintf(serverMessage, sizeof(serverMessage), "%d", list[i].GUID);
-		//send(new_socket , serverMessage , strlen(serverMessage) , 0 );
 		write(new_socket, serverMessage, strlen(serverMessage));
-		puts(serverMessage);
 		valread = read( new_socket , buffer, 1024);
 		strcpy(list[i].fileName, buffer);
-                printf("client: %s\n",buffer );
-	
 
-		printf("GUID: %d FileName: %s timeStamp: %d\n", list[i].GUID, list[i].fileName,list[i].timeStamp );
+                printf("TCP Connection Initialized Client: %d\n", list[i].GUID);
+
+		printf("GUID: %d FileName: %s timeStamp: %d\n\n", list[i].GUID, list[i].fileName,list[i].timeStamp );
 	i++;
 	}
 	close(new_socket);
+}
+
+int check(int clientTime){
+
+long currentTime = time(0);
+
+if((currentTime - clientTime) > 200){
+	return 1;	
+}
+return 0;
+
 }
 
 long random(){
 	srand(time(0));
 	return rand()%1001;
 }
+
